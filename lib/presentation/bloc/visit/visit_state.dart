@@ -1,22 +1,31 @@
 import '../../../domain/entities/visit.dart';
 
-abstract class VisitState{
-const VisitState();
+abstract class VisitState {
+  const VisitState();
 }
-class VisitInitial extends VisitState{
+
+class VisitInitial extends VisitState {
   const VisitInitial();
 }
-class VisitLoading extends VisitState{
+
+class VisitLoading extends VisitState {
   const VisitLoading();
 }
-class VisitLoaded extends VisitState{
-  final List<Visit>visits;
+
+class VisitLoaded extends VisitState {
+  final List<Visit> visits;
+
   const VisitLoaded(this.visits);
 }
-class VisitEmpty extends VisitState{
+
+class VisitEmpty extends VisitState {
   const VisitEmpty();
 }
-class VisitError extends VisitState{
+
+class VisitError extends VisitState {
   final String message;
-  const VisitError(this.message);
+
+  const VisitError({
+    required this.message,
+  });
 }

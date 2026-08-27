@@ -13,9 +13,10 @@ class AppDimensions {
   static const double inputHeight = 48.0;
 
   // Border radius
-  static const double radiusSmall = 8.0;
-  static const double radiusMedium = 12.0;
-  static const double radiusLarge = 16.0;
+  static const double radiusXs = 2.0;
+  static const double radiusSmall = 7.0;
+  static const double radiusMedium = 14.0;
+  static const double radiusLarge = 22.0;
 
   // Borders
   static const double borderWidth = 1.0;

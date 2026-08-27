@@ -1,12 +1,12 @@
-import 'package:winnapp/domain/entities/visit.dart';
-import 'package:winnapp/domain/repositories/visit_repository.dart';
+import '../entities/visit.dart';
+import '../repositories/visit_repository.dart';
 
 class CreateVisit {
   final VisitRepository repository;
 
   const CreateVisit(this.repository);
 
-  Future<Visit> call(Visit visit) {
+  Future<void> call(Visit visit) {
     return repository.createVisit(visit);
   }
 }

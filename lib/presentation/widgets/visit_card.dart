@@ -20,53 +20,40 @@ class VisitCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppCard(
       onTap: onTap,
-      child: Padding(
-        padding: AppSpacing.cardPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    visit.siteName,
-                    style: AppTextStyles.cardTitle,
-                  ),
+      padding: AppSpacing.cardPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  visit.siteName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.cardTitle,
                 ),
-                StatusChip(stage: visit.stage),
-              ],
-            ),
-            SizedBox(height: AppSpacing.small),
-            Text(
-              '${_formatDate(visit.date)} · ${visit.notes}',
-              style: AppTextStyles.bodyMedium,
-            ),
-          ],
-        ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              StatusChip(
+                stage: visit.stage,
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            visit.location,
+            style: AppTextStyles.bodyMedium,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            visit.notes,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.bodySmall,
+          ),
+        ],
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${_monthName(date.month)} ${date.day}';
-  }
-
-  String _monthName(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-
-    return months[month - 1];
   }
 }

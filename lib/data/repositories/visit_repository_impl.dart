@@ -45,6 +45,7 @@ class VisitRepositoryImpl implements VisitRepository {
     final model = VisitMapper.toModel(visit);
 
     await localDataSource.updateLocalVisit(model);
+    await localDataSource.updateVisitLog(model);
 
     return visit;
   }
