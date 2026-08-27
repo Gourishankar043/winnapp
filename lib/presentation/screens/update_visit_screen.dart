@@ -20,7 +20,6 @@ class UpdateVisitScreen extends StatefulWidget {
 class _UpdateVisitScreenState extends State<UpdateVisitScreen> {
   Visit? _visit;
   bool _initialized = false;
-  bool _submitted = false;
 
   @override
   void didChangeDependencies() {
@@ -53,27 +52,19 @@ class _UpdateVisitScreenState extends State<UpdateVisitScreen> {
 
     return BlocConsumer<VisitBloc, VisitState>(
       listener: (context, state) {
-        if (!_submitted) {
+        if (state is VisitUpdated) {
+          if (!mounted) {
+            return;
+          }
+
+          Navigator.pop(
+            context,
+            state.visit,
+          );
           return;
         }
 
-        if (state is VisitLoaded) {
-          final updatedVisit = _findVisit(
-            state.visits,
-            visit.id,
-          );
-
-          if (updatedVisit != null) {
-            Navigator.pop(
-              context,
-              updatedVisit,
-            );
-          }
-        }
-
         if (state is VisitError) {
-          _submitted = false;
-
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
@@ -90,7 +81,11 @@ class _UpdateVisitScreenState extends State<UpdateVisitScreen> {
             leading: IconButton(
               onPressed: isLoading
                   ? null
-                  : () => Navigator.pop(context),
+                  : () {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+              },
               icon: const Icon(Icons.close),
             ),
           ),
@@ -131,23 +126,8 @@ class _UpdateVisitScreenState extends State<UpdateVisitScreen> {
       syncedAt: currentVisit.syncedAt,
     );
 
-    _submitted = true;
-
     context.read<VisitBloc>().add(
       UpdateVisitRequested(updatedVisit),
     );
-  }
-
-  Visit? _findVisit(
-      List<Visit> visits,
-      String id,
-      ) {
-    for (final visit in visits) {
-      if (visit.id == id) {
-        return visit;
-      }
-    }
-
-    return null;
   }
 }

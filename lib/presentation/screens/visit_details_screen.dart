@@ -22,8 +22,7 @@ class VisitDetailsScreen extends StatefulWidget {
 }
 
 class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
-  late Visit _visit;
-
+  Visit? _visit;
   bool _initialized = false;
 
   @override
@@ -36,17 +35,18 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
 
     final arguments = ModalRoute.of(context)?.settings.arguments;
 
-    if (arguments is! Visit) {
-      return;
+    if (arguments is Visit) {
+      _visit = arguments;
     }
 
-    _visit = arguments;
     _initialized = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_initialized) {
+    final visit = _visit;
+
+    if (visit == null) {
       return const Scaffold(
         body: Center(
           child: Text('Visit not found'),
@@ -56,17 +56,22 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
 
     return BlocConsumer<VisitBloc, VisitState>(
       listener: (context, state) {
-        if (state is VisitLoaded) {
-          final updatedVisit = _findVisit(
-            state.visits,
-            _visit.id,
-          );
-
-          if (updatedVisit != null) {
+        if (state is VisitUpdated) {
+          if (state.visit.id == _visit?.id) {
             setState(() {
-              _visit = updatedVisit;
+              _visit = state.visit;
             });
           }
+          return;
+        }
+
+        if (state is VisitSynced) {
+          if (state.visit.id == _visit?.id) {
+            setState(() {
+              _visit = state.visit;
+            });
+          }
+          return;
         }
 
         if (state is VisitError) {
@@ -78,13 +83,19 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
         }
       },
       builder: (context, state) {
+        final currentVisit = _visit!;
+
         final isSaving = state is VisitLoading;
 
         return Scaffold(
           appBar: AppBar(
             title: const Text('Detail'),
             leading: IconButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+              },
               icon: const Icon(Icons.arrow_back),
             ),
           ),
@@ -95,14 +106,14 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _visit.siteName,
+                    currentVisit.siteName,
                     style: AppTextStyles.titleMedium,
                   ),
 
                   const SizedBox(height: AppSpacing.sm),
 
                   StatusChip(
-                    stage: _visit.stage,
+                    stage: currentVisit.stage,
                   ),
 
                   const SizedBox(height: AppSpacing.md),
@@ -113,21 +124,22 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
 
                   _DetailRow(
                     label: 'Date',
-                    value: _formatDate(_visit.date),
+                    value: _formatDate(currentVisit.date),
                   ),
 
                   const SizedBox(height: AppSpacing.md),
 
                   _DetailRow(
                     label: 'Location',
-                    value: _visit.location,
+                    value: currentVisit.location,
                   ),
 
                   const SizedBox(height: AppSpacing.md),
 
                   _DetailRow(
                     label: 'Logged by',
-                    value: 'You · ${_formatCreatedAt(_visit.createdAt)}',
+                    value:
+                    'You · ${_formatCreatedAt(currentVisit.createdAt)}',
                   ),
 
                   const SizedBox(height: AppSpacing.lg),
@@ -135,7 +147,7 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
                   AppCard(
                     padding: const EdgeInsets.all(AppSpacing.md),
                     child: Text(
-                      _visit.notes,
+                      currentVisit.notes,
                       style: AppTextStyles.bodyMedium,
                     ),
                   ),
@@ -147,6 +159,7 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
           ),
           bottomNavigationBar: _buildBottomActions(
             context,
+            currentVisit,
             isSaving,
           ),
         );
@@ -156,13 +169,14 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
 
   Widget? _buildBottomActions(
       BuildContext context,
+      Visit visit,
       bool isSaving,
       ) {
-    if (_visit.stage == VisitStage.synced) {
+    if (visit.stage == VisitStage.synced) {
       return null;
     }
 
-    final isFailed = _visit.stage == VisitStage.failed;
+    final isFailed = visit.stage == VisitStage.failed;
 
     return SafeArea(
       child: Padding(
@@ -183,7 +197,7 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
                   await Navigator.pushNamed<Visit>(
                     context,
                     RouteNames.updateVisit,
-                    arguments: _visit,
+                    arguments: visit,
                   );
 
                   if (!mounted || updatedVisit == null) {
@@ -203,12 +217,16 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
                 child: const Text('Edit'),
               ),
             ),
+
             const SizedBox(width: AppSpacing.sm),
+
             Expanded(
               child: ElevatedButton(
                 onPressed: isSaving
                     ? null
-                    : () => _syncVisit(context),
+                    : () {
+                  _syncVisit(context);
+                },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(
                     double.infinity,
@@ -235,22 +253,15 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
   }
 
   void _syncVisit(BuildContext context) {
-    context.read<VisitBloc>().add(
-      SyncVisitRequested(_visit),
-    );
-  }
+    final visit = _visit;
 
-  Visit? _findVisit(
-      List<Visit> visits,
-      String id,
-      ) {
-    for (final visit in visits) {
-      if (visit.id == id) {
-        return visit;
-      }
+    if (visit == null) {
+      return;
     }
 
-    return null;
+    context.read<VisitBloc>().add(
+      SyncVisitRequested(visit),
+    );
   }
 
   String _formatDate(DateTime date) {

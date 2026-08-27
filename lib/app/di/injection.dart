@@ -1,6 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/localization/language_storage.dart';
 import '../../core/network/connectivity_service.dart';
 import '../../data/datasources/visit_local_data_source.dart';
 import '../../data/datasources/visit_remote_data_source.dart';
@@ -12,9 +14,22 @@ import '../../domain/usecases/sync_visits.dart';
 import '../../domain/usecases/update_visit.dart';
 import '../../presentation/bloc/network/network_bloc.dart';
 import '../../presentation/bloc/visit/visit_bloc.dart';
+
 final GetIt getIt = GetIt.instance;
 
-void configureDependencies() {
+Future<void> configureDependencies() async {
+  final preferences = await SharedPreferences.getInstance();
+
+  getIt.registerSingleton<SharedPreferences>(
+    preferences,
+  );
+
+  getIt.registerLazySingleton<LanguageStorage>(
+        () => LanguageStorage(
+      preferences: getIt<SharedPreferences>(),
+    ),
+  );
+
   // Connectivity
   getIt.registerLazySingleton<Connectivity>(
         () => Connectivity(),
@@ -45,20 +60,30 @@ void configureDependencies() {
 
   // Use cases
   getIt.registerLazySingleton<GetVisits>(
-        () => GetVisits(getIt<VisitRepository>()),
+        () => GetVisits(
+      getIt<VisitRepository>(),
+    ),
   );
 
   getIt.registerLazySingleton<CreateVisit>(
-        () => CreateVisit(getIt<VisitRepository>()),
+        () => CreateVisit(
+      getIt<VisitRepository>(),
+    ),
   );
 
   getIt.registerLazySingleton<UpdateVisit>(
-        () => UpdateVisit(getIt<VisitRepository>()),
+        () => UpdateVisit(
+      getIt<VisitRepository>(),
+    ),
   );
 
   getIt.registerLazySingleton<SyncVisits>(
-        () => SyncVisits(getIt<VisitRepository>()),
+        () => SyncVisits(
+      getIt<VisitRepository>(),
+    ),
   );
+
+  // BLoCs
   getIt.registerFactory<NetworkBloc>(
         () => NetworkBloc(
       connectivityService: getIt<ConnectivityService>(),

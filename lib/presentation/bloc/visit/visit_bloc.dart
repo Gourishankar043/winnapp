@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/visit.dart';
 import '../../../domain/usecases/create_visit.dart';
 import '../../../domain/usecases/get_visits.dart';
 import '../../../domain/usecases/sync_visits.dart';
@@ -40,7 +39,9 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
         return;
       }
 
-      emit(VisitLoaded(visits));
+      emit(
+        VisitLoaded(visits),
+      );
     } catch (e) {
       emit(
         VisitError(
@@ -59,13 +60,9 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
     try {
       await createVisit(event.visit);
 
-      final visits = await getVisits();
-
-      if (visits.isEmpty) {
-        emit(const VisitEmpty());
-      } else {
-        emit(VisitLoaded(visits));
-      }
+      emit(
+        VisitCreated(event.visit),
+      );
     } catch (e) {
       emit(
         VisitError(
@@ -82,15 +79,11 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
     emit(const VisitLoading());
 
     try {
-      await updateVisit(event.visit);
+      final updatedVisit = await updateVisit(event.visit);
 
-      final visits = await getVisits();
-
-      if (visits.isEmpty) {
-        emit(const VisitEmpty());
-      } else {
-        emit(VisitLoaded(visits));
-      }
+      emit(
+        VisitUpdated(updatedVisit),
+      );
     } catch (e) {
       emit(
         VisitError(
@@ -107,15 +100,11 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
     emit(const VisitLoading());
 
     try {
-      await syncVisits(event.visit);
+      final result = await syncVisits(event.visit);
 
-      final visits = await getVisits();
-
-      if (visits.isEmpty) {
-        emit(const VisitEmpty());
-      } else {
-        emit(VisitLoaded(visits));
-      }
+      emit(
+        VisitSynced(result),
+      );
     } catch (e) {
       emit(
         VisitError(

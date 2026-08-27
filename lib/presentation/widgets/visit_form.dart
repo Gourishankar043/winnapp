@@ -4,6 +4,7 @@ import '../../core/components/buttons/primary_button.dart';
 import '../../core/components/inputs/app_date_field.dart';
 import '../../core/components/inputs/app_text_field.dart';
 import '../../core/theme/app_spacing.dart';
+import '../../l10n/app_localizations.dart';
 
 class VisitForm extends StatefulWidget {
   final String submitLabel;
@@ -73,6 +74,8 @@ class _VisitFormState extends State<VisitForm> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -80,50 +83,42 @@ class _VisitFormState extends State<VisitForm> {
         children: [
           AppTextField(
             controller: _siteNameController,
-            label: 'Site name',
-            hint: 'Enter site name',
+            label: l10n.siteName,
+            hint: l10n.enterSiteName,
             validator: _requiredValidator,
             textInputAction: TextInputAction.next,
           ),
-
           const SizedBox(height: AppSpacing.md),
-
           AppDateField(
             controller: _dateController,
-            label: 'Date',
+            label: l10n.date,
             validator: (_) {
               if (_selectedDate == null) {
-                return 'Date is required';
+                return l10n.requiredField;
               }
 
               return null;
             },
             onTap: _selectDate,
           ),
-
           const SizedBox(height: AppSpacing.md),
-
           AppTextField(
             controller: _locationController,
-            label: 'Location',
-            hint: 'Enter location',
+            label: l10n.location,
+            hint: l10n.enterLocation,
             validator: _requiredValidator,
             textInputAction: TextInputAction.next,
           ),
-
           const SizedBox(height: AppSpacing.md),
-
           AppTextField(
             controller: _notesController,
-            label: 'Notes',
-            hint: 'Enter visit notes',
+            label: l10n.notes,
+            hint: l10n.enterVisitNotes,
             validator: _requiredValidator,
             maxLines: 4,
             textInputAction: TextInputAction.done,
           ),
-
           const SizedBox(height: AppSpacing.lg),
-
           PrimaryButton(
             label: widget.submitLabel,
             onPressed: widget.isLoading ? null : _submit,
@@ -174,8 +169,10 @@ class _VisitFormState extends State<VisitForm> {
   }
 
   String? _requiredValidator(String? value) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (value == null || value.trim().isEmpty) {
-      return 'This field is required';
+      return l10n.requiredField;
     }
 
     return null;

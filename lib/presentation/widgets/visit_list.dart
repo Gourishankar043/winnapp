@@ -24,7 +24,7 @@ class VisitList extends StatelessWidget {
         AppSpacing.xxl,
       ),
       itemCount: visits.length,
-      separatorBuilder: (_, __) =>
+      separatorBuilder: (_, _) =>
       const SizedBox(height: AppSpacing.sm),
       itemBuilder: (context, index) {
         final visit = visits[index];

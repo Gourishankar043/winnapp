@@ -6,7 +6,6 @@ import '../../core/components/feedback/empty_state.dart';
 import '../../core/components/feedback/error_view.dart';
 import '../../core/components/feedback/loading_view.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_spacing.dart';
 import '../bloc/visit/visit_bloc.dart';
 import '../bloc/visit/visit_event.dart';
 import '../bloc/visit/visit_state.dart';
@@ -26,9 +25,15 @@ class _VisitListScreenState extends State<VisitListScreen> {
   void initState() {
     super.initState();
 
-    context.read<VisitBloc>().add(
-      const LoadVisits(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      context.read<VisitBloc>().add(
+        const LoadVisits(),
+      );
+    });
   }
 
   @override
@@ -38,9 +43,7 @@ class _VisitListScreenState extends State<VisitListScreen> {
         title: const Text('Visits'),
         actions: [
           IconButton(
-            onPressed: () {
-              // Search/filter functionality will be added later.
-            },
+            onPressed: () {},
             icon: const Icon(Icons.search),
           ),
         ],
@@ -55,7 +58,8 @@ class _VisitListScreenState extends State<VisitListScreen> {
             return EmptyState(
               icon: Icons.assignment_outlined,
               title: 'No visits logged yet',
-              message: 'Tap the + button to record your first site visit.',
+              message:
+              'Tap the + button to record your first site visit.',
               actionLabel: 'Add visit',
               onAction: _openCreateVisit,
             );
@@ -75,11 +79,21 @@ class _VisitListScreenState extends State<VisitListScreen> {
           if (state is VisitLoaded) {
             return VisitList(
               visits: state.visits,
-              onVisitTap: (visit) {
-                Navigator.pushNamed(
+              onVisitTap: (visit) async {
+                final visitBloc = context.read<VisitBloc>();
+
+                await Navigator.pushNamed(
                   context,
                   RouteNames.visitDetails,
                   arguments: visit,
+                );
+
+                if (!mounted) {
+                  return;
+                }
+
+                visitBloc.add(
+                  const LoadVisits(),
                 );
               },
             );
@@ -97,18 +111,20 @@ class _VisitListScreenState extends State<VisitListScreen> {
     );
   }
 
-  void _openCreateVisit() {
-    Navigator.pushNamed(
+  Future<void> _openCreateVisit() async {
+    final visitBloc = context.read<VisitBloc>();
+
+    await Navigator.pushNamed(
       context,
       RouteNames.createVisit,
-    ).then((_) {
-      if (!mounted) {
-        return;
-      }
+    );
 
-      context.read<VisitBloc>().add(
-        const LoadVisits(),
-      );
-    });
+    if (!mounted) {
+      return;
+    }
+
+    visitBloc.add(
+      const LoadVisits(),
+    );
   }
 }

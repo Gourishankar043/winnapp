@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_dimensions.dart';
 import '../../theme/app_spacing.dart';
@@ -11,6 +12,8 @@ class OfflineBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -35,8 +38,11 @@ class OfflineBanner extends StatelessWidget {
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
-                "You're offline — changes save locally",
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                l10n.offlineMessage,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(
                   color: AppColors.warning,
                   fontWeight: FontWeight.w600,
                 ),

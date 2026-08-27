@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../core/theme/app_spacing.dart';
 import '../../domain/entities/visit.dart';
+import '../../l10n/app_localizations.dart';
 import '../bloc/visit/visit_bloc.dart';
 import '../bloc/visit/visit_event.dart';
 import '../bloc/visit/visit_state.dart';
@@ -21,18 +22,27 @@ class CreateVisitScreen extends StatefulWidget {
 class _CreateVisitScreenState extends State<CreateVisitScreen> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New visit'),
+        title: Text(l10n.newVisit),
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+          },
           icon: const Icon(Icons.close),
         ),
       ),
       body: BlocConsumer<VisitBloc, VisitState>(
         listener: (context, state) {
-          if (state is VisitLoaded) {
-            Navigator.pop(context);
+          if (state is VisitCreated) {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+            return;
           }
 
           if (state is VisitError) {
@@ -49,7 +59,7 @@ class _CreateVisitScreenState extends State<CreateVisitScreen> {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(AppSpacing.md),
             child: VisitForm(
-              submitLabel: 'Save visit',
+              submitLabel: l10n.saveVisit,
               isLoading: isLoading,
               onSubmit: _createVisit,
             ),

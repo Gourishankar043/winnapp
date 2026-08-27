@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../theme/app_dimensions.dart';
 import '../../theme/app_spacing.dart';
 import '../buttons/primary_button.dart';
@@ -16,6 +17,8 @@ class ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -36,7 +39,7 @@ class ErrorView extends StatelessWidget {
             if (onRetry != null) ...[
               const SizedBox(height: AppSpacing.lg),
               PrimaryButton(
-                label: 'Retry',
+                label: l10n.retry,
                 onPressed: onRetry,
               ),
             ],
