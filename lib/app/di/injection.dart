@@ -10,6 +10,7 @@ import '../../data/repositories/visit_repository_impl.dart';
 import '../../domain/repositories/visit_repository.dart';
 import '../../domain/usecases/create_visit.dart';
 import '../../domain/usecases/get_visits.dart';
+import '../../domain/usecases/search_visits.dart';
 import '../../domain/usecases/sync_visits.dart';
 import '../../domain/usecases/update_visit.dart';
 import '../../presentation/bloc/network/network_bloc.dart';
@@ -30,7 +31,6 @@ Future<void> configureDependencies() async {
     ),
   );
 
-  // Connectivity
   getIt.registerLazySingleton<Connectivity>(
         () => Connectivity(),
   );
@@ -41,7 +41,6 @@ Future<void> configureDependencies() async {
     ),
   );
 
-  // Data sources
   getIt.registerLazySingleton<VisitLocalDataSource>(
         () => VisitLocalDataSourceImpl(),
   );
@@ -50,7 +49,6 @@ Future<void> configureDependencies() async {
         () => VisitRemoteDataSourceImpl(),
   );
 
-  // Repository
   getIt.registerLazySingleton<VisitRepository>(
         () => VisitRepositoryImpl(
       localDataSource: getIt<VisitLocalDataSource>(),
@@ -58,7 +56,6 @@ Future<void> configureDependencies() async {
     ),
   );
 
-  // Use cases
   getIt.registerLazySingleton<GetVisits>(
         () => GetVisits(
       getIt<VisitRepository>(),
@@ -83,7 +80,10 @@ Future<void> configureDependencies() async {
     ),
   );
 
-  // BLoCs
+  getIt.registerLazySingleton<SearchVisits>(
+        () => const SearchVisits(),
+  );
+
   getIt.registerFactory<NetworkBloc>(
         () => NetworkBloc(
       connectivityService: getIt<ConnectivityService>(),
@@ -96,6 +96,7 @@ Future<void> configureDependencies() async {
       createVisit: getIt<CreateVisit>(),
       updateVisit: getIt<UpdateVisit>(),
       syncVisits: getIt<SyncVisits>(),
+      searchVisits: getIt<SearchVisits>(),
     ),
   );
 }

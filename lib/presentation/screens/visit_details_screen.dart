@@ -4,24 +4,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../app/routes/route_names.dart';
 import '../../core/components/cards/app_card.dart';
 import '../../core/components/chips/status_chip.dart';
+import '../../core/components/navigation/app_scaffold.dart';
 import '../../core/theme/app_dimensions.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../domain/entities/visit.dart';
+import '../../l10n/app_localizations.dart';
 import '../bloc/visit/visit_bloc.dart';
 import '../bloc/visit/visit_event.dart';
 import '../bloc/visit/visit_state.dart';
 
 class VisitDetailsScreen extends StatefulWidget {
+  final ValueChanged<Locale> onLocaleChanged;
+
   const VisitDetailsScreen({
     super.key,
+    required this.onLocaleChanged,
   });
 
   @override
-  State<VisitDetailsScreen> createState() => _VisitDetailsScreenState();
+  State<VisitDetailsScreen> createState() =>
+      _VisitDetailsScreenState();
 }
 
-class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
+class _VisitDetailsScreenState
+    extends State<VisitDetailsScreen> {
   Visit? _visit;
   bool _initialized = false;
 
@@ -33,7 +40,8 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
       return;
     }
 
-    final arguments = ModalRoute.of(context)?.settings.arguments;
+    final arguments =
+        ModalRoute.of(context)?.settings.arguments;
 
     if (arguments is Visit) {
       _visit = arguments;
@@ -44,139 +52,190 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n =
+    AppLocalizations.of(context)!;
+
     final visit = _visit;
 
     if (visit == null) {
-      return const Scaffold(
+      return AppScaffold(
+        onLocaleChanged:
+        widget.onLocaleChanged,
         body: Center(
-          child: Text('Visit not found'),
+          child: Text(
+            l10n.visitNotFound,
+          ),
         ),
       );
     }
 
     return BlocConsumer<VisitBloc, VisitState>(
-      listener: (context, state) {
-        if (state is VisitUpdated) {
-          if (state.visit.id == _visit?.id) {
-            setState(() {
-              _visit = state.visit;
-            });
-          }
-          return;
-        }
-
-        if (state is VisitSynced) {
-          if (state.visit.id == _visit?.id) {
-            setState(() {
-              _visit = state.visit;
-            });
-          }
-          return;
-        }
-
-        if (state is VisitError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-        }
-      },
+      listener: _handleState,
       builder: (context, state) {
         final currentVisit = _visit!;
 
-        final isSaving = state is VisitLoading;
-
-        return Scaffold(
+        return AppScaffold(
+          onLocaleChanged:
+          widget.onLocaleChanged,
           appBar: AppBar(
-            title: const Text('Detail'),
-            leading: IconButton(
-              onPressed: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
-              },
-              icon: const Icon(Icons.arrow_back),
-            ),
+            title: Text(l10n.detail),
           ),
           body: SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.md),
+              padding: const EdgeInsets.all(
+                AppSpacing.md,
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
                 children: [
                   Text(
                     currentVisit.siteName,
-                    style: AppTextStyles.titleMedium,
+                    style:
+                    AppTextStyles.titleMedium,
                   ),
 
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(
+                    height: AppSpacing.sm,
+                  ),
 
                   StatusChip(
                     stage: currentVisit.stage,
                   ),
 
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(
+                    height: AppSpacing.md,
+                  ),
 
                   const Divider(),
 
-                  const SizedBox(height: AppSpacing.md),
-
-                  _DetailRow(
-                    label: 'Date',
-                    value: _formatDate(currentVisit.date),
+                  const SizedBox(
+                    height: AppSpacing.md,
                   ),
 
-                  const SizedBox(height: AppSpacing.md),
-
                   _DetailRow(
-                    label: 'Location',
-                    value: currentVisit.location,
-                  ),
-
-                  const SizedBox(height: AppSpacing.md),
-
-                  _DetailRow(
-                    label: 'Logged by',
-                    value:
-                    'You · ${_formatCreatedAt(currentVisit.createdAt)}',
-                  ),
-
-                  const SizedBox(height: AppSpacing.lg),
-
-                  AppCard(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Text(
-                      currentVisit.notes,
-                      style: AppTextStyles.bodyMedium,
+                    label: l10n.date,
+                    value: _formatDate(
+                      currentVisit.date,
                     ),
                   ),
 
-                  const SizedBox(height: AppSpacing.xxl),
+                  const SizedBox(
+                    height: AppSpacing.md,
+                  ),
+
+                  _DetailRow(
+                    label: l10n.location,
+                    value: currentVisit.location,
+                  ),
+
+                  const SizedBox(
+                    height: AppSpacing.md,
+                  ),
+
+                  _DetailRow(
+                    label: l10n.loggedBy,
+                    value:
+                    '${l10n.appTitle} · '
+                        '${_formatCreatedAt(currentVisit.createdAt)}',
+                  ),
+
+                  const SizedBox(
+                    height: AppSpacing.lg,
+                  ),
+
+                  AppCard(
+                    padding: const EdgeInsets.all(
+                      AppSpacing.md,
+                    ),
+                    child: Text(
+                      currentVisit.notes,
+                      style:
+                      AppTextStyles.bodyMedium,
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: AppSpacing.xxl,
+                  ),
                 ],
               ),
             ),
           ),
-          bottomNavigationBar: _buildBottomActions(
+          bottomNavigationBar:
+          _buildBottomActions(
             context,
             currentVisit,
-            isSaving,
+            state is VisitLoading,
+            l10n,
           ),
         );
       },
     );
   }
 
+  void _handleState(
+      BuildContext context,
+      VisitState state,
+      ) {
+    if (state is VisitUpdated) {
+      if (state.visit.id == _visit?.id) {
+        setState(() {
+          _visit = state.visit;
+        });
+      }
+
+      return;
+    }
+
+    if (state is VisitSynced) {
+      if (state.visit.id != _visit?.id) {
+        return;
+      }
+
+      setState(() {
+        _visit = state.visit;
+      });
+
+      final message =
+      state.visit.stage == VisitStage.synced
+          ? 'Visit synced successfully.'
+          : 'Visit sync failed. Please try again.';
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(message),
+          ),
+        );
+
+      return;
+    }
+
+    if (state is VisitError) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(state.message),
+          ),
+        );
+    }
+  }
+
   Widget? _buildBottomActions(
       BuildContext context,
       Visit visit,
       bool isSaving,
+      AppLocalizations l10n,
       ) {
     if (visit.stage == VisitStage.synced) {
       return null;
     }
 
-    final isFailed = visit.stage == VisitStage.failed;
+    final isFailed =
+        visit.stage == VisitStage.failed;
 
     return SafeArea(
       child: Padding(
@@ -194,13 +253,15 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
                     ? null
                     : () async {
                   final updatedVisit =
-                  await Navigator.pushNamed<Visit>(
+                  await Navigator
+                      .pushNamed<Visit>(
                     context,
                     RouteNames.updateVisit,
                     arguments: visit,
                   );
 
-                  if (!mounted || updatedVisit == null) {
+                  if (!mounted ||
+                      updatedVisit == null) {
                     return;
                   }
 
@@ -208,17 +269,21 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
                     _visit = updatedVisit;
                   });
                 },
-                style: OutlinedButton.styleFrom(
+                style:
+                OutlinedButton.styleFrom(
                   minimumSize: const Size(
                     double.infinity,
-                    AppDimensions.buttonHeight,
+                    AppDimensions
+                        .buttonHeight,
                   ),
                 ),
-                child: const Text('Edit'),
+                child: Text(l10n.edit),
               ),
             ),
 
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(
+              width: AppSpacing.sm,
+            ),
 
             Expanded(
               child: ElevatedButton(
@@ -227,22 +292,29 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
                     : () {
                   _syncVisit(context);
                 },
-                style: ElevatedButton.styleFrom(
+                style:
+                ElevatedButton.styleFrom(
                   minimumSize: const Size(
                     double.infinity,
-                    AppDimensions.buttonHeight,
+                    AppDimensions
+                        .buttonHeight,
                   ),
                 ),
                 child: isSaving
                     ? const SizedBox(
-                  width: AppDimensions.iconSmall,
-                  height: AppDimensions.iconSmall,
-                  child: CircularProgressIndicator(
+                  width: AppDimensions
+                      .iconSmall,
+                  height: AppDimensions
+                      .iconSmall,
+                  child:
+                  CircularProgressIndicator(
                     strokeWidth: 2,
                   ),
                 )
                     : Text(
-                  isFailed ? 'Retry' : 'Save',
+                  isFailed
+                      ? l10n.retry
+                      : l10n.save,
                 ),
               ),
             ),
@@ -265,11 +337,13 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
   }
 
   String _formatDate(DateTime date) {
-    return '${_monthName(date.month)} ${date.day}, ${date.year}';
+    return '${_monthName(date.month)} '
+        '${date.day}, ${date.year}';
   }
 
   String _formatCreatedAt(DateTime date) {
-    final difference = DateTime.now().difference(date);
+    final difference =
+    DateTime.now().difference(date);
 
     if (difference.inMinutes < 1) {
       return 'just now';
@@ -318,16 +392,21 @@ class _DetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+      CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 80,
+        Flexible(
+          flex: 2,
           child: Text(
             label.toUpperCase(),
             style: AppTextStyles.labelSmall,
           ),
         ),
-        Expanded(
+        const SizedBox(
+          width: AppSpacing.md,
+        ),
+        Flexible(
+          flex: 5,
           child: Text(
             value,
             style: AppTextStyles.bodyMedium,

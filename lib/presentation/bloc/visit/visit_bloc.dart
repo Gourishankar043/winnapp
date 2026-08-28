@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entities/visit.dart';
 import '../../../domain/usecases/create_visit.dart';
 import '../../../domain/usecases/get_visits.dart';
+import '../../../domain/usecases/search_visits.dart';
 import '../../../domain/usecases/sync_visits.dart';
 import '../../../domain/usecases/update_visit.dart';
 import 'visit_event.dart';
@@ -12,17 +14,24 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
   final CreateVisit createVisit;
   final UpdateVisit updateVisit;
   final SyncVisits syncVisits;
+  final SearchVisits searchVisits;
+
+  List<Visit> _allVisits = [];
+
+  List<Visit> get allVisits => List.unmodifiable(_allVisits);
 
   VisitBloc({
     required this.getVisits,
     required this.createVisit,
     required this.updateVisit,
     required this.syncVisits,
+    required this.searchVisits,
   }) : super(const VisitInitial()) {
     on<LoadVisits>(_onLoadVisits);
     on<CreateVisitRequested>(_onCreateVisit);
     on<UpdateVisitRequested>(_onUpdateVisit);
     on<SyncVisitRequested>(_onSyncVisit);
+    on<SearchVisitsRequested>(_onSearchVisits);
   }
 
   Future<void> _onLoadVisits(
@@ -34,14 +43,14 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
     try {
       final visits = await getVisits();
 
+      _allVisits = visits;
+
       if (visits.isEmpty) {
         emit(const VisitEmpty());
         return;
       }
 
-      emit(
-        VisitLoaded(visits),
-      );
+      emit(VisitLoaded(visits));
     } catch (e) {
       emit(
         VisitError(
@@ -59,6 +68,10 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
 
     try {
       await createVisit(event.visit);
+
+      final visits = await getVisits();
+
+      _allVisits = visits;
 
       emit(
         VisitCreated(event.visit),
@@ -81,6 +94,10 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
     try {
       final updatedVisit = await updateVisit(event.visit);
 
+      final visits = await getVisits();
+
+      _allVisits = visits;
+
       emit(
         VisitUpdated(updatedVisit),
       );
@@ -100,10 +117,14 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
     emit(const VisitLoading());
 
     try {
-      final result = await syncVisits(event.visit);
+      final syncedVisit = await syncVisits(event.visit);
+
+      final visits = await getVisits();
+
+      _allVisits = visits;
 
       emit(
-        VisitSynced(result),
+        VisitSynced(syncedVisit),
       );
     } catch (e) {
       emit(
@@ -112,5 +133,24 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
         ),
       );
     }
+  }
+
+  void _onSearchVisits(
+      SearchVisitsRequested event,
+      Emitter<VisitState> emit,
+      ) {
+    final filteredVisits = searchVisits(
+      _allVisits,
+      event.query,
+    );
+
+    if (filteredVisits.isEmpty) {
+      emit(const VisitEmpty());
+      return;
+    }
+
+    emit(
+      VisitLoaded(filteredVisits),
+    );
   }
 }

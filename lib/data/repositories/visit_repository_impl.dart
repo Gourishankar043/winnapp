@@ -16,8 +16,11 @@ class VisitRepositoryImpl implements VisitRepository {
 
   @override
   Future<List<Visit>> getVisits() async {
-    final localVisits = await localDataSource.getLocalVisits();
-    final visitLog = await localDataSource.getVisitLog();
+    final localVisits =
+    await localDataSource.getLocalVisits();
+
+    final visitLog =
+    await localDataSource.getVisitLog();
 
     final visits = [
       ...localVisits,
@@ -25,14 +28,20 @@ class VisitRepositoryImpl implements VisitRepository {
     ];
 
     visits.sort(
-          (a, b) => b.createdAt.compareTo(a.createdAt),
+          (a, b) => b.createdAt.compareTo(
+        a.createdAt,
+      ),
     );
 
-    return visits.map(VisitMapper.toEntity).toList();
+    return visits
+        .map(VisitMapper.toEntity)
+        .toList();
   }
 
   @override
-  Future<Visit> createVisit(Visit visit) async {
+  Future<Visit> createVisit(
+      Visit visit,
+      ) async {
     final model = VisitMapper.toModel(visit);
 
     await localDataSource.insertLocalVisit(model);
@@ -41,29 +50,61 @@ class VisitRepositoryImpl implements VisitRepository {
   }
 
   @override
-  Future<Visit> updateVisit(Visit visit) async {
+  Future<Visit> updateVisit(
+      Visit visit,
+      ) async {
     final model = VisitMapper.toModel(visit);
 
-    await localDataSource.updateLocalVisit(model);
-    await localDataSource.updateVisitLog(model);
+    final updatedLocal =
+    await localDataSource.updateLocalVisit(
+      model,
+    );
 
-    return visit;
+    if (updatedLocal) {
+      return visit;
+    }
+
+    final updatedLog =
+    await localDataSource.updateVisitLog(
+      model,
+    );
+
+    if (updatedLog) {
+      return visit;
+    }
+
+    throw StateError(
+      'Visit could not be updated because '
+          'the visit was not found.',
+    );
   }
 
   @override
-  Future<Visit> syncVisit(Visit visit) async {
+  Future<Visit> syncVisit(
+      Visit visit,
+      ) async {
     final model = VisitMapper.toModel(visit);
 
     final requestData = model.toJson();
 
-    final response = await remoteDataSource.syncVisit(requestData);
+    final response =
+    await remoteDataSource.syncVisit(
+      requestData,
+    );
 
-    final responseModel = VisitModel.fromJson(response);
+    final responseModel =
+    VisitModel.fromJson(response);
 
-    await localDataSource.deleteLocalVisit(visit.id);
+    await localDataSource.deleteLocalVisit(
+      visit.id,
+    );
 
-    await localDataSource.insertVisitLog(responseModel);
+    await localDataSource.insertVisitLog(
+      responseModel,
+    );
 
-    return VisitMapper.toEntity(responseModel);
+    return VisitMapper.toEntity(
+      responseModel,
+    );
   }
 }

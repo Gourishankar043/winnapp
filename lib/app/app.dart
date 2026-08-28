@@ -69,7 +69,6 @@ class _AppState extends State<App> {
         title: 'Field Visit Log',
         theme: AppTheme.lightTheme,
         locale: _locale,
-
         supportedLocales: const [
           Locale('en'),
           Locale('es'),
@@ -77,23 +76,19 @@ class _AppState extends State<App> {
           Locale('de'),
           Locale('it'),
         ],
-
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-
         initialRoute: RouteNames.visitList,
-
         onGenerateRoute: (settings) {
           return AppRoutes.onGenerateRoute(
             settings,
             onLocaleChanged: _changeLocale,
           );
         },
-
         builder: (context, child) {
           return BlocBuilder<NetworkBloc, NetworkState>(
             builder: (context, state) {
@@ -102,17 +97,24 @@ class _AppState extends State<App> {
               return Column(
                 children: [
                   AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
+                    duration: const Duration(
+                      milliseconds: 250,
+                    ),
                     child: isOffline
                         ? const OfflineBanner(
-                      key: ValueKey('offline-banner'),
+                      key: ValueKey(
+                        'offline-banner',
+                      ),
                     )
                         : const SizedBox.shrink(
-                      key: ValueKey('online-state'),
+                      key: ValueKey(
+                        'online-state',
+                      ),
                     ),
                   ),
                   Expanded(
-                    child: child ?? const SizedBox.shrink(),
+                    child: child ??
+                        const SizedBox.shrink(),
                   ),
                 ],
               );

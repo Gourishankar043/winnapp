@@ -2,38 +2,41 @@ import 'dart:async';
 import 'dart:math';
 
 abstract class VisitRemoteDataSource {
-  Future<Map<String,dynamic>>syncVisit(
-      Map<String,dynamic>data,
+  Future<Map<String, dynamic>> syncVisit(
+      Map<String, dynamic> data,
       );
-
 }
-class VisitRemoteDataSourceImpl implements VisitRemoteDataSource{
+
+class VisitRemoteDataSourceImpl
+    implements VisitRemoteDataSource {
   final Random _random;
-  VisitRemoteDataSourceImpl({Random? random}):_random=random??Random();
+
+  VisitRemoteDataSourceImpl({
+    Random? random,
+  }) : _random = random ?? Random();
 
   @override
-  Future<Map<String,dynamic>>syncVisit(
-      Map<String,dynamic>data,
-      )async{
-    await Future.delayed(const Duration(seconds: 1));
-    const stages=[
-      'synced',
-      'draft',
-      'failed',
-    ];
-    final stage=stages[_random.nextInt(stages.length)];
-    final response = Map<String, dynamic>.from(data);
+  Future<Map<String, dynamic>> syncVisit(
+      Map<String, dynamic> data,
+      ) async {
+    await Future.delayed(
+      const Duration(seconds: 1),
+    );
 
-    response['stage'] = stage;
+    final isSuccessful = _random.nextBool();
 
-    if (stage == 'synced') {
-      response['synced_at'] = DateTime.now().toIso8601String();
+    final response =
+    Map<String, dynamic>.from(data);
+
+    if (isSuccessful) {
+      response['stage'] = 'synced';
+      response['synced_at'] =
+          DateTime.now().toIso8601String();
     } else {
+      response['stage'] = 'failed';
       response['synced_at'] = null;
     }
 
     return response;
-
-
   }
 }

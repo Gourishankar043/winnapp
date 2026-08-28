@@ -69,6 +69,7 @@ class _VisitFormState extends State<VisitForm> {
     _dateController.dispose();
     _locationController.dispose();
     _notesController.dispose();
+
     super.dispose();
   }
 
@@ -88,7 +89,11 @@ class _VisitFormState extends State<VisitForm> {
             validator: _requiredValidator,
             textInputAction: TextInputAction.next,
           ),
-          const SizedBox(height: AppSpacing.md),
+
+          const SizedBox(
+            height: AppSpacing.md,
+          ),
+
           AppDateField(
             controller: _dateController,
             label: l10n.date,
@@ -101,7 +106,11 @@ class _VisitFormState extends State<VisitForm> {
             },
             onTap: _selectDate,
           ),
-          const SizedBox(height: AppSpacing.md),
+
+          const SizedBox(
+            height: AppSpacing.md,
+          ),
+
           AppTextField(
             controller: _locationController,
             label: l10n.location,
@@ -109,7 +118,11 @@ class _VisitFormState extends State<VisitForm> {
             validator: _requiredValidator,
             textInputAction: TextInputAction.next,
           ),
-          const SizedBox(height: AppSpacing.md),
+
+          const SizedBox(
+            height: AppSpacing.md,
+          ),
+
           AppTextField(
             controller: _notesController,
             label: l10n.notes,
@@ -118,7 +131,11 @@ class _VisitFormState extends State<VisitForm> {
             maxLines: 4,
             textInputAction: TextInputAction.done,
           ),
-          const SizedBox(height: AppSpacing.lg),
+
+          const SizedBox(
+            height: AppSpacing.lg,
+          ),
+
           PrimaryButton(
             label: widget.submitLabel,
             onPressed: widget.isLoading ? null : _submit,
@@ -130,6 +147,10 @@ class _VisitFormState extends State<VisitForm> {
   }
 
   Future<void> _selectDate() async {
+    if (widget.isLoading) {
+      return;
+    }
+
     final now = DateTime.now();
 
     final pickedDate = await showDatePicker(
@@ -150,18 +171,26 @@ class _VisitFormState extends State<VisitForm> {
   }
 
   void _submit() {
-    if (!_formKey.currentState!.validate()) {
+    if (widget.isLoading) {
       return;
     }
 
-    if (_selectedDate == null) {
+    final formState = _formKey.currentState;
+
+    if (formState == null || !formState.validate()) {
+      return;
+    }
+
+    final selectedDate = _selectedDate;
+
+    if (selectedDate == null) {
       return;
     }
 
     widget.onSubmit(
       VisitFormData(
         siteName: _siteNameController.text.trim(),
-        date: _selectedDate!,
+        date: selectedDate,
         location: _locationController.text.trim(),
         notes: _notesController.text.trim(),
       ),
@@ -169,9 +198,8 @@ class _VisitFormState extends State<VisitForm> {
   }
 
   String? _requiredValidator(String? value) {
-    final l10n = AppLocalizations.of(context)!;
-
     if (value == null || value.trim().isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       return l10n.requiredField;
     }
 
@@ -183,7 +211,8 @@ class _VisitFormState extends State<VisitForm> {
       return '';
     }
 
-    return '${_monthName(date.month)} ${date.day}, ${date.year}';
+    return '${_monthName(date.month)} '
+        '${date.day}, ${date.year}';
   }
 
   String _monthName(int month) {

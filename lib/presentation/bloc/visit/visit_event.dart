@@ -25,3 +25,9 @@ class SyncVisitRequested extends VisitEvent {
 
   const SyncVisitRequested(this.visit);
 }
+
+class SearchVisitsRequested extends VisitEvent {
+  final String query;
+
+  const SearchVisitsRequested(this.query);
+}

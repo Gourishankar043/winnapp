@@ -12,28 +12,38 @@ class AppRoutes {
 
   static Route<dynamic> onGenerateRoute(
       RouteSettings settings, {
-        ValueChanged<Locale>? onLocaleChanged,
+        required ValueChanged<Locale> onLocaleChanged,
       }) {
     switch (settings.name) {
       case RouteNames.visitList:
         return MaterialPageRoute(
-          builder: (_) => const VisitListScreen(),
+          builder: (_) => VisitListScreen(
+            onLocaleChanged: onLocaleChanged,
+          ),
+          settings: settings,
         );
 
       case RouteNames.createVisit:
         return MaterialPageRoute(
-          builder: (_) => const CreateVisitScreen(),
+          builder: (_) => CreateVisitScreen(
+            onLocaleChanged: onLocaleChanged,
+          ),
+          settings: settings,
         );
 
       case RouteNames.updateVisit:
         return MaterialPageRoute(
-          builder: (_) => const UpdateVisitScreen(),
+          builder: (_) => UpdateVisitScreen(
+            onLocaleChanged: onLocaleChanged,
+          ),
           settings: settings,
         );
 
       case RouteNames.visitDetails:
         return MaterialPageRoute(
-          builder: (_) => const VisitDetailsScreen(),
+          builder: (_) => VisitDetailsScreen(
+            onLocaleChanged: onLocaleChanged,
+          ),
           settings: settings,
         );
 
@@ -42,11 +52,15 @@ class AppRoutes {
           builder: (_) => LanguageScreen(
             onLocaleChanged: onLocaleChanged,
           ),
+          settings: settings,
         );
 
       default:
         return MaterialPageRoute(
-          builder: (_) => const VisitListScreen(),
+          builder: (_) => VisitListScreen(
+            onLocaleChanged: onLocaleChanged,
+          ),
+          settings: settings,
         );
     }
   }

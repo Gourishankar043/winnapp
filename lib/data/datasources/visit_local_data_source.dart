@@ -11,13 +11,13 @@ abstract class VisitLocalDataSource {
 
   Future<void> insertLocalVisit(VisitModel visit);
 
-  Future<void> updateLocalVisit(VisitModel visit);
+  Future<bool> updateLocalVisit(VisitModel visit);
 
   Future<void> deleteLocalVisit(String id);
 
   Future<void> insertVisitLog(VisitModel visit);
 
-  Future<void> updateVisitLog(VisitModel visit);
+  Future<bool> updateVisitLog(VisitModel visit);
 }
 
 class VisitLocalDataSourceImpl implements VisitLocalDataSource {
@@ -40,7 +40,10 @@ class VisitLocalDataSourceImpl implements VisitLocalDataSource {
 
   Future<Database> _openDatabase() async {
     final databasePath = await getDatabasesPath();
-    final pathToDatabase = join(databasePath, _databaseName);
+    final pathToDatabase = join(
+      databasePath,
+      _databaseName,
+    );
 
     return openDatabase(
       pathToDatabase,
@@ -98,7 +101,9 @@ class VisitLocalDataSourceImpl implements VisitLocalDataSource {
   }
 
   @override
-  Future<void> insertLocalVisit(VisitModel visit) async {
+  Future<void> insertLocalVisit(
+      VisitModel visit,
+      ) async {
     final db = await database;
 
     await db.insert(
@@ -109,19 +114,25 @@ class VisitLocalDataSourceImpl implements VisitLocalDataSource {
   }
 
   @override
-  Future<void> updateLocalVisit(VisitModel visit) async {
+  Future<bool> updateLocalVisit(
+      VisitModel visit,
+      ) async {
     final db = await database;
 
-    await db.update(
+    final affectedRows = await db.update(
       _localVisitsTable,
       _modelToLocalRow(visit),
       where: 'id = ?',
       whereArgs: [visit.id],
     );
+
+    return affectedRows > 0;
   }
 
   @override
-  Future<void> deleteLocalVisit(String id) async {
+  Future<void> deleteLocalVisit(
+      String id,
+      ) async {
     final db = await database;
 
     await db.delete(
@@ -132,7 +143,9 @@ class VisitLocalDataSourceImpl implements VisitLocalDataSource {
   }
 
   @override
-  Future<void> insertVisitLog(VisitModel visit) async {
+  Future<void> insertVisitLog(
+      VisitModel visit,
+      ) async {
     final db = await database;
 
     await db.insert(
@@ -143,18 +156,24 @@ class VisitLocalDataSourceImpl implements VisitLocalDataSource {
   }
 
   @override
-  Future<void> updateVisitLog(VisitModel visit) async {
+  Future<bool> updateVisitLog(
+      VisitModel visit,
+      ) async {
     final db = await database;
 
-    await db.update(
+    final affectedRows = await db.update(
       _visitLogTable,
       _modelToLogRow(visit),
       where: 'id = ?',
       whereArgs: [visit.id],
     );
+
+    return affectedRows > 0;
   }
 
-  Map<String, dynamic> _modelToLocalRow(VisitModel visit) {
+  Map<String, dynamic> _modelToLocalRow(
+      VisitModel visit,
+      ) {
     return {
       'id': visit.id,
       'site_name': visit.siteName,
@@ -165,7 +184,9 @@ class VisitLocalDataSourceImpl implements VisitLocalDataSource {
     };
   }
 
-  Map<String, dynamic> _modelToLogRow(VisitModel visit) {
+  Map<String, dynamic> _modelToLogRow(
+      VisitModel visit,
+      ) {
     return {
       'id': visit.id,
       'site_name': visit.siteName,
@@ -178,30 +199,46 @@ class VisitLocalDataSourceImpl implements VisitLocalDataSource {
     };
   }
 
-  VisitModel _localRowToModel(Map<String, dynamic> row) {
+  VisitModel _localRowToModel(
+      Map<String, dynamic> row,
+      ) {
     return VisitModel(
       id: row['id'] as String,
       siteName: row['site_name'] as String,
-      date: DateTime.parse(row['date'] as String),
+      date: DateTime.parse(
+        row['date'] as String,
+      ),
       location: row['location'] as String,
       notes: row['notes'] as String,
-      createdAt: DateTime.parse(row['created_at'] as String),
+      createdAt: DateTime.parse(
+        row['created_at'] as String,
+      ),
       stage: VisitStage.draft,
       syncedAt: null,
     );
   }
 
-  VisitModel _logRowToModel(Map<String, dynamic> row) {
+  VisitModel _logRowToModel(
+      Map<String, dynamic> row,
+      ) {
     return VisitModel(
       id: row['id'] as String,
       siteName: row['site_name'] as String,
-      date: DateTime.parse(row['date'] as String),
+      date: DateTime.parse(
+        row['date'] as String,
+      ),
       location: row['location'] as String,
       notes: row['notes'] as String,
-      createdAt: DateTime.parse(row['created_at'] as String),
-      stage: VisitStage.values.byName(row['stage'] as String),
+      createdAt: DateTime.parse(
+        row['created_at'] as String,
+      ),
+      stage: VisitStage.values.byName(
+        row['stage'] as String,
+      ),
       syncedAt: row['synced_at'] != null
-          ? DateTime.parse(row['synced_at'] as String)
+          ? DateTime.parse(
+        row['synced_at'] as String,
+      )
           : null,
     );
   }
