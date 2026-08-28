@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../../domain/entities/visit.dart';
 import '../../presentation/screens/create_visit_screen.dart';
 import '../../presentation/screens/language_screen.dart';
 import '../../presentation/screens/update_visit_screen.dart';
@@ -16,51 +16,51 @@ class AppRoutes {
       }) {
     switch (settings.name) {
       case RouteNames.visitList:
-        return MaterialPageRoute(
+        return MaterialPageRoute<void>(
+          settings: settings,
           builder: (_) => VisitListScreen(
             onLocaleChanged: onLocaleChanged,
           ),
-          settings: settings,
         );
 
       case RouteNames.createVisit:
-        return MaterialPageRoute(
+        return MaterialPageRoute<Visit?>(
+          settings: settings,
           builder: (_) => CreateVisitScreen(
             onLocaleChanged: onLocaleChanged,
           ),
-          settings: settings,
         );
 
       case RouteNames.updateVisit:
-        return MaterialPageRoute(
+        return MaterialPageRoute<Visit?>(
+          settings: settings,
           builder: (_) => UpdateVisitScreen(
             onLocaleChanged: onLocaleChanged,
           ),
-          settings: settings,
         );
 
       case RouteNames.visitDetails:
-        return MaterialPageRoute(
+        return MaterialPageRoute<void>(
+          settings: settings,
           builder: (_) => VisitDetailsScreen(
             onLocaleChanged: onLocaleChanged,
           ),
-          settings: settings,
         );
 
       case RouteNames.language:
-        return MaterialPageRoute(
+        return MaterialPageRoute<void>(
+          settings: settings,
           builder: (_) => LanguageScreen(
             onLocaleChanged: onLocaleChanged,
           ),
-          settings: settings,
         );
 
       default:
-        return MaterialPageRoute(
+        return MaterialPageRoute<void>(
+          settings: settings,
           builder: (_) => VisitListScreen(
             onLocaleChanged: onLocaleChanged,
           ),
-          settings: settings,
         );
     }
   }

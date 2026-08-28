@@ -11,13 +11,13 @@ abstract class VisitLocalDataSource {
 
   Future<void> insertLocalVisit(VisitModel visit);
 
-  Future<bool> updateLocalVisit(VisitModel visit);
+  Future<int> updateLocalVisit(VisitModel visit);
 
   Future<void> deleteLocalVisit(String id);
 
   Future<void> insertVisitLog(VisitModel visit);
 
-  Future<bool> updateVisitLog(VisitModel visit);
+  Future<int> updateVisitLog(VisitModel visit);
 }
 
 class VisitLocalDataSourceImpl implements VisitLocalDataSource {
@@ -114,19 +114,17 @@ class VisitLocalDataSourceImpl implements VisitLocalDataSource {
   }
 
   @override
-  Future<bool> updateLocalVisit(
+  Future<int> updateLocalVisit(
       VisitModel visit,
       ) async {
     final db = await database;
 
-    final affectedRows = await db.update(
+    return db.update(
       _localVisitsTable,
       _modelToLocalRow(visit),
       where: 'id = ?',
       whereArgs: [visit.id],
     );
-
-    return affectedRows > 0;
   }
 
   @override
@@ -156,19 +154,17 @@ class VisitLocalDataSourceImpl implements VisitLocalDataSource {
   }
 
   @override
-  Future<bool> updateVisitLog(
+  Future<int> updateVisitLog(
       VisitModel visit,
       ) async {
     final db = await database;
 
-    final affectedRows = await db.update(
+    return db.update(
       _visitLogTable,
       _modelToLogRow(visit),
       where: 'id = ?',
       whereArgs: [visit.id],
     );
-
-    return affectedRows > 0;
   }
 
   Map<String, dynamic> _modelToLocalRow(

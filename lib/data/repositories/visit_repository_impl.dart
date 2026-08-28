@@ -55,27 +55,23 @@ class VisitRepositoryImpl implements VisitRepository {
       ) async {
     final model = VisitMapper.toModel(visit);
 
-    final updatedLocal =
-    await localDataSource.updateLocalVisit(
-      model,
-    );
+    final localRowsUpdated =
+    await localDataSource.updateLocalVisit(model);
 
-    if (updatedLocal) {
+    if (localRowsUpdated > 0) {
       return visit;
     }
 
-    final updatedLog =
-    await localDataSource.updateVisitLog(
-      model,
-    );
+    final logRowsUpdated =
+    await localDataSource.updateVisitLog(model);
 
-    if (updatedLog) {
+    if (logRowsUpdated > 0) {
       return visit;
     }
 
     throw StateError(
-      'Visit could not be updated because '
-          'the visit was not found.',
+      'Unable to update visit: '
+          'no visit found with id ${visit.id}.',
     );
   }
 
