@@ -19,7 +19,8 @@ import '../../presentation/bloc/visit/visit_bloc.dart';
 final GetIt getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
-  final preferences = await SharedPreferences.getInstance();
+  final preferences =
+  await SharedPreferences.getInstance();
 
   getIt.registerSingleton<SharedPreferences>(
     preferences,
@@ -51,8 +52,10 @@ Future<void> configureDependencies() async {
 
   getIt.registerLazySingleton<VisitRepository>(
         () => VisitRepositoryImpl(
-      localDataSource: getIt<VisitLocalDataSource>(),
-      remoteDataSource: getIt<VisitRemoteDataSource>(),
+      localDataSource:
+      getIt<VisitLocalDataSource>(),
+      remoteDataSource:
+      getIt<VisitRemoteDataSource>(),
     ),
   );
 
@@ -76,7 +79,9 @@ Future<void> configureDependencies() async {
 
   getIt.registerLazySingleton<SyncVisits>(
         () => SyncVisits(
-      getIt<VisitRepository>(),
+      repository: getIt<VisitRepository>(),
+      connectivityService:
+      getIt<ConnectivityService>(),
     ),
   );
 
@@ -86,7 +91,8 @@ Future<void> configureDependencies() async {
 
   getIt.registerFactory<NetworkBloc>(
         () => NetworkBloc(
-      connectivityService: getIt<ConnectivityService>(),
+      connectivityService:
+      getIt<ConnectivityService>(),
     ),
   );
 

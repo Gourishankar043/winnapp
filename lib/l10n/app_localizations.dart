@@ -266,6 +266,24 @@ abstract class AppLocalizations {
   /// **'You\'re offline — changes save locally'**
   String get offlineMessage;
 
+  /// No description provided for @syncSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit synced successfully.'**
+  String get syncSuccess;
+
+  /// No description provided for @syncFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit sync failed. Please try again.'**
+  String get syncFailed;
+
+  /// No description provided for @syncOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Unable to sync. Visit remains saved as a draft.'**
+  String get syncOffline;
+
   /// No description provided for @requiredField.
   ///
   /// In en, this message translates to:

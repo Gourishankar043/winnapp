@@ -91,6 +91,17 @@ class AppLocalizationsIt extends AppLocalizations {
       'Sei offline — le modifiche vengono salvate localmente';
 
   @override
+  String get syncSuccess => 'Visita sincronizzata correttamente.';
+
+  @override
+  String get syncFailed =>
+      'La sincronizzazione della visita non è riuscita. Riprova.';
+
+  @override
+  String get syncOffline =>
+      'Nessuna connessione Internet. Impossibile sincronizzare. La visita rimane salvata come bozza.';
+
+  @override
   String get requiredField => 'Questo campo è obbligatorio';
 
   @override

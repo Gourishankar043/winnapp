@@ -91,6 +91,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get offlineMessage => 'You\'re offline — changes save locally';
 
   @override
+  String get syncSuccess => 'Visit synced successfully.';
+
+  @override
+  String get syncFailed => 'Visit sync failed. Please try again.';
+
+  @override
+  String get syncOffline =>
+      'No internet connection. Unable to sync. Visit remains saved as a draft.';
+
+  @override
   String get requiredField => 'This field is required';
 
   @override

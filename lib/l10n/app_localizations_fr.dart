@@ -92,6 +92,17 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vous êtes hors ligne — les modifications sont enregistrées localement';
 
   @override
+  String get syncSuccess => 'La visite a été synchronisée avec succès.';
+
+  @override
+  String get syncFailed =>
+      'La synchronisation de la visite a échoué. Veuillez réessayer.';
+
+  @override
+  String get syncOffline =>
+      'Aucune connexion Internet. Impossible de synchroniser. La visite reste enregistrée comme brouillon.';
+
+  @override
   String get requiredField => 'Ce champ est obligatoire';
 
   @override
@@ -101,7 +112,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get english => 'Anglais';
 
   @override
-  String get spanish => 'Espagnol';
+  String get spanish => 'Español';
 
   @override
   String get french => 'Français';

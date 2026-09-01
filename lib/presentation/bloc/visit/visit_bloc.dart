@@ -18,7 +18,8 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
 
   List<Visit> _allVisits = [];
 
-  List<Visit> get allVisits => List.unmodifiable(_allVisits);
+  List<Visit> get allVisits =>
+      List.unmodifiable(_allVisits);
 
   VisitBloc({
     required this.getVisits,
@@ -92,7 +93,8 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
     emit(const VisitLoading());
 
     try {
-      final updatedVisit = await updateVisit(event.visit);
+      final updatedVisit =
+      await updateVisit(event.visit);
 
       final visits = await getVisits();
 
@@ -117,7 +119,8 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
     emit(const VisitLoading());
 
     try {
-      final syncedVisit = await syncVisits(event.visit);
+      final syncedVisit =
+      await syncVisits(event.visit);
 
       final visits = await getVisits();
 
@@ -125,6 +128,10 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
 
       emit(
         VisitSynced(syncedVisit),
+      );
+    } on OfflineSyncException {
+      emit(
+        VisitSyncOffline(event.visit),
       );
     } catch (e) {
       emit(

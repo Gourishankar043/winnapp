@@ -40,6 +40,12 @@ class VisitSynced extends VisitState {
   const VisitSynced(this.visit);
 }
 
+class VisitSyncOffline extends VisitState {
+  final Visit visit;
+
+  const VisitSyncOffline(this.visit);
+}
+
 class VisitError extends VisitState {
   final String message;
 

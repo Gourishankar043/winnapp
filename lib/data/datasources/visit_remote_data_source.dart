@@ -23,10 +23,10 @@ class VisitRemoteDataSourceImpl
       const Duration(seconds: 1),
     );
 
-    final isSuccessful = _random.nextBool();
-
     final response =
     Map<String, dynamic>.from(data);
+
+    final isSuccessful = _random.nextBool();
 
     if (isSuccessful) {
       response['stage'] = 'synced';

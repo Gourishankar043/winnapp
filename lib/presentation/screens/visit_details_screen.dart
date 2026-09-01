@@ -94,56 +94,44 @@ class _VisitDetailsScreenState
                     style:
                     AppTextStyles.titleMedium,
                   ),
-
                   const SizedBox(
                     height: AppSpacing.sm,
                   ),
-
                   StatusChip(
                     stage: currentVisit.stage,
                   ),
-
                   const SizedBox(
                     height: AppSpacing.md,
                   ),
-
                   const Divider(),
-
                   const SizedBox(
                     height: AppSpacing.md,
                   ),
-
                   _DetailRow(
                     label: l10n.date,
                     value: _formatDate(
                       currentVisit.date,
                     ),
                   ),
-
                   const SizedBox(
                     height: AppSpacing.md,
                   ),
-
                   _DetailRow(
                     label: l10n.location,
                     value: currentVisit.location,
                   ),
-
                   const SizedBox(
                     height: AppSpacing.md,
                   ),
-
                   _DetailRow(
                     label: l10n.loggedBy,
                     value:
                     '${l10n.appTitle} · '
                         '${_formatCreatedAt(currentVisit.createdAt)}',
                   ),
-
                   const SizedBox(
                     height: AppSpacing.lg,
                   ),
-
                   AppCard(
                     padding: const EdgeInsets.all(
                       AppSpacing.md,
@@ -154,7 +142,6 @@ class _VisitDetailsScreenState
                       AppTextStyles.bodyMedium,
                     ),
                   ),
-
                   const SizedBox(
                     height: AppSpacing.xxl,
                   ),
@@ -197,16 +184,44 @@ class _VisitDetailsScreenState
         _visit = state.visit;
       });
 
+      final l10n =
+      AppLocalizations.of(context)!;
+
       final message =
       state.visit.stage == VisitStage.synced
-          ? 'Visit synced successfully.'
-          : 'Visit sync failed. Please try again.';
+          ? l10n.syncSuccess
+          : l10n.syncFailed;
 
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
           SnackBar(
             content: Text(message),
+          ),
+        );
+
+      return;
+    }
+
+    if (state is VisitSyncOffline) {
+      if (state.visit.id != _visit?.id) {
+        return;
+      }
+
+      setState(() {
+        _visit = state.visit;
+      });
+
+      final l10n =
+      AppLocalizations.of(context)!;
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              l10n.syncOffline,
+            ),
           ),
         );
 
@@ -280,11 +295,9 @@ class _VisitDetailsScreenState
                 child: Text(l10n.edit),
               ),
             ),
-
             const SizedBox(
               width: AppSpacing.sm,
             ),
-
             Expanded(
               child: ElevatedButton(
                 onPressed: isSaving

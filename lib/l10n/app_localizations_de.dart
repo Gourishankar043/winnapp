@@ -92,6 +92,17 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sie sind offline — Änderungen werden lokal gespeichert';
 
   @override
+  String get syncSuccess => 'Besuch erfolgreich synchronisiert.';
+
+  @override
+  String get syncFailed =>
+      'Die Synchronisierung des Besuchs ist fehlgeschlagen. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get syncOffline =>
+      'Keine Internetverbindung. Synchronisierung nicht möglich. Der Besuch bleibt als Entwurf gespeichert.';
+
+  @override
   String get requiredField => 'Dieses Feld ist erforderlich';
 
   @override

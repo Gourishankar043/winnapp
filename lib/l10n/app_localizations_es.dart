@@ -92,6 +92,17 @@ class AppLocalizationsEs extends AppLocalizations {
       'Estás sin conexión — los cambios se guardan localmente';
 
   @override
+  String get syncSuccess => 'La visita se sincronizó correctamente.';
+
+  @override
+  String get syncFailed =>
+      'La sincronización de la visita falló. Inténtalo de nuevo.';
+
+  @override
+  String get syncOffline =>
+      'No hay conexión a Internet. No se puede sincronizar. La visita permanece guardada como borrador.';
+
+  @override
   String get requiredField => 'Este campo es obligatorio';
 
   @override
