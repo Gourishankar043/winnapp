@@ -3,7 +3,6 @@ enum VisitStage {
   synced,
   failed,
 }
-
 class Visit {
   final String id;
   final String siteName;
@@ -13,7 +12,6 @@ class Visit {
   final DateTime createdAt;
   final VisitStage stage;
   final DateTime? syncedAt;
-
   const Visit({
     required this.id,
     required this.siteName,

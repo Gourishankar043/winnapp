@@ -19,90 +19,41 @@ import '../../presentation/bloc/visit/visit_bloc.dart';
 final GetIt getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
-  final preferences =
-  await SharedPreferences.getInstance();
+  final preferences = await SharedPreferences.getInstance();
 
-  getIt.registerSingleton<SharedPreferences>(
-    preferences,
-  );
+  getIt.registerSingleton<SharedPreferences>(preferences);
+  getIt.registerLazySingleton<LanguageStorage>(() => LanguageStorage(preferences: getIt<SharedPreferences>()));
+  getIt.registerLazySingleton<Connectivity>(() => Connectivity());
+  getIt.registerLazySingleton<ConnectivityService>(() => ConnectivityServiceImpl(connectivity: getIt<Connectivity>()));
 
-  getIt.registerLazySingleton<LanguageStorage>(
-        () => LanguageStorage(
-      preferences: getIt<SharedPreferences>(),
-    ),
-  );
+  getIt.registerLazySingleton<VisitLocalDataSource>(() => VisitLocalDataSourceImpl());
+  getIt.registerLazySingleton<VisitRemoteDataSource>(() => VisitRemoteDataSourceImpl());
 
-  getIt.registerLazySingleton<Connectivity>(
-        () => Connectivity(),
-  );
+  getIt.registerLazySingleton<VisitRepository>(() => VisitRepositoryImpl(
+    localDataSource: getIt<VisitLocalDataSource>(),
+    remoteDataSource: getIt<VisitRemoteDataSource>(),
+  ));
 
-  getIt.registerLazySingleton<ConnectivityService>(
-        () => ConnectivityServiceImpl(
-      connectivity: getIt<Connectivity>(),
-    ),
-  );
+  getIt.registerLazySingleton<GetVisits>(() => GetVisits(getIt<VisitRepository>()));
+  getIt.registerLazySingleton<CreateVisit>(() => CreateVisit(getIt<VisitRepository>()));
+  getIt.registerLazySingleton<UpdateVisit>(() => UpdateVisit(getIt<VisitRepository>()));
 
-  getIt.registerLazySingleton<VisitLocalDataSource>(
-        () => VisitLocalDataSourceImpl(),
-  );
+  getIt.registerLazySingleton<SyncVisits>(() => SyncVisits(
+    repository: getIt<VisitRepository>(),
+    connectivityService: getIt<ConnectivityService>(),
+  ));
 
-  getIt.registerLazySingleton<VisitRemoteDataSource>(
-        () => VisitRemoteDataSourceImpl(),
-  );
+  getIt.registerLazySingleton<SearchVisits>(() => const SearchVisits());
 
-  getIt.registerLazySingleton<VisitRepository>(
-        () => VisitRepositoryImpl(
-      localDataSource:
-      getIt<VisitLocalDataSource>(),
-      remoteDataSource:
-      getIt<VisitRemoteDataSource>(),
-    ),
-  );
+  getIt.registerFactory<NetworkBloc>(() => NetworkBloc(
+    connectivityService: getIt<ConnectivityService>(),
+  ));
 
-  getIt.registerLazySingleton<GetVisits>(
-        () => GetVisits(
-      getIt<VisitRepository>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<CreateVisit>(
-        () => CreateVisit(
-      getIt<VisitRepository>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<UpdateVisit>(
-        () => UpdateVisit(
-      getIt<VisitRepository>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<SyncVisits>(
-        () => SyncVisits(
-      repository: getIt<VisitRepository>(),
-      connectivityService:
-      getIt<ConnectivityService>(),
-    ),
-  );
-
-  getIt.registerLazySingleton<SearchVisits>(
-        () => const SearchVisits(),
-  );
-
-  getIt.registerFactory<NetworkBloc>(
-        () => NetworkBloc(
-      connectivityService:
-      getIt<ConnectivityService>(),
-    ),
-  );
-
-  getIt.registerFactory<VisitBloc>(
-        () => VisitBloc(
-      getVisits: getIt<GetVisits>(),
-      createVisit: getIt<CreateVisit>(),
-      updateVisit: getIt<UpdateVisit>(),
-      syncVisits: getIt<SyncVisits>(),
-      searchVisits: getIt<SearchVisits>(),
-    ),
-  );
+  getIt.registerFactory<VisitBloc>(() => VisitBloc(
+    getVisits: getIt<GetVisits>(),
+    createVisit: getIt<CreateVisit>(),
+    updateVisit: getIt<UpdateVisit>(),
+    syncVisits: getIt<SyncVisits>(),
+    searchVisits: getIt<SearchVisits>(),
+  ));
 }

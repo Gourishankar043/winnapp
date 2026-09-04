@@ -94,6 +94,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syncSuccess => 'Visit synced successfully.';
 
   @override
+  String get syncDraft => 'Visit is still a draft. You can try syncing again.';
+
+  @override
   String get syncFailed => 'Visit sync failed. Please try again.';
 
   @override

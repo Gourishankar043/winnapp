@@ -28,6 +28,7 @@
   "justNow": "à l'instant",
   "offlineMessage": "Vous êtes hors ligne — les modifications sont enregistrées localement",
   "syncSuccess": "La visite a été synchronisée avec succès.",
+  "syncDraft": "La visite est toujours un brouillon. Vous pouvez essayer de la synchroniser à nouveau.",
   "syncFailed": "La synchronisation de la visite a échoué. Veuillez réessayer.",
   "syncOffline": "Aucune connexion Internet. Impossible de synchroniser. La visite reste enregistrée comme brouillon.",
   "requiredField": "Ce champ est obligatoire",

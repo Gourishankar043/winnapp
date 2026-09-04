@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/app_dimensions.dart';
-
 class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
@@ -15,7 +14,6 @@ class AppTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final bool enabled;
   final int maxLines;
-
   const AppTextField({
     super.key,
     required this.controller,
@@ -31,7 +29,6 @@ class AppTextField extends StatelessWidget {
     this.enabled = true,
     this.maxLines = 1,
   });
-
   @override
   Widget build(BuildContext context) {
     return TextFormField(

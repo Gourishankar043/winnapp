@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_dimensions.dart';
 import 'app_text_styles.dart';
-
 class AppTheme {
   AppTheme._();
-
   static ThemeData get lightTheme {
     return ThemeData(
       brightness: Brightness.light,
@@ -33,33 +31,23 @@ class AppTheme {
         filled: true,
         fillColor: AppColors.lightSurface,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppDimensions.radiusMedium,
-          ),
-          borderSide: const BorderSide(
-            color: AppColors.lightBorder,
-          ),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
+          borderSide: const BorderSide(color: AppColors.lightBorder),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          minimumSize: const Size(
-            double.infinity,
-            AppDimensions.buttonHeight,
-          ),
+          minimumSize: const Size(double.infinity, AppDimensions.buttonHeight),
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.onPrimary,
           textStyle: AppTextStyles.button,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              AppDimensions.radiusMedium,
-            ),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
           ),
         ),
       ),
     );
   }
-
   static ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,
@@ -71,21 +59,11 @@ class AppTheme {
         error: AppColors.error,
       ),
       textTheme: TextTheme(
-        titleLarge: AppTextStyles.titleLarge.copyWith(
-          color: AppColors.darkText,
-        ),
-        titleMedium: AppTextStyles.titleMedium.copyWith(
-          color: AppColors.darkText,
-        ),
-        bodyLarge: AppTextStyles.bodyLarge.copyWith(
-          color: AppColors.darkText,
-        ),
-        bodyMedium: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.darkMutedText,
-        ),
-        labelLarge: AppTextStyles.labelLarge.copyWith(
-          color: AppColors.darkText,
-        ),
+        titleLarge: AppTextStyles.titleLarge.copyWith(color: AppColors.darkText),
+        titleMedium: AppTextStyles.titleMedium.copyWith(color: AppColors.darkText),
+        bodyLarge: AppTextStyles.bodyLarge.copyWith(color: AppColors.darkText),
+        bodyMedium: AppTextStyles.bodyMedium.copyWith(color: AppColors.darkMutedText),
+        labelLarge: AppTextStyles.labelLarge.copyWith(color: AppColors.darkText),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.darkBackground,
@@ -96,27 +74,18 @@ class AppTheme {
         filled: true,
         fillColor: AppColors.darkSurface,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppDimensions.radiusMedium,
-          ),
-          borderSide: const BorderSide(
-            color: AppColors.darkBorder,
-          ),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
+          borderSide: const BorderSide(color: AppColors.darkBorder),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          minimumSize: const Size(
-            double.infinity,
-            AppDimensions.buttonHeight,
-          ),
+          minimumSize: const Size(double.infinity, AppDimensions.buttonHeight),
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.onPrimary,
           textStyle: AppTextStyles.button,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              AppDimensions.radiusMedium,
-            ),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
           ),
         ),
       ),

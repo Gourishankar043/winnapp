@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 import '../../core/theme/app_spacing.dart';
 import '../../domain/entities/visit.dart';
 import 'visit_card.dart';
-
 class VisitList extends StatelessWidget {
   final List<Visit> visits;
   final ValueChanged<Visit>? onVisitTap;

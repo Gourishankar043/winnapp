@@ -1,9 +1,7 @@
 import '../../domain/entities/visit.dart';
 import '../models/visit_model.dart';
-
 class VisitMapper {
   VisitMapper._();
-
   static Visit toEntity(VisitModel model) {
     return Visit(
       id: model.id,
@@ -16,7 +14,6 @@ class VisitMapper {
       syncedAt: model.syncedAt,
     );
   }
-
   static VisitModel toModel(Visit entity) {
     return VisitModel(
       id: entity.id,

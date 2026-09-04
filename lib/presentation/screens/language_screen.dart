@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
-
 class LanguageScreen extends StatelessWidget {
   final ValueChanged<Locale>? onLocaleChanged;
-
   const LanguageScreen({
     super.key,
     this.onLocaleChanged,
   });
-
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final currentLocale = Localizations.localeOf(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -58,20 +54,17 @@ class LanguageScreen extends StatelessWidget {
     );
   }
 }
-
 class _LanguageTile extends StatelessWidget {
   final String title;
   final Locale locale;
   final bool selected;
   final ValueChanged<Locale>? onTap;
-
   const _LanguageTile({
     required this.title,
     required this.locale,
     required this.selected,
     required this.onTap,
   });
-
   @override
   Widget build(BuildContext context) {
     return ListTile(

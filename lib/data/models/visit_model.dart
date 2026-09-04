@@ -1,5 +1,4 @@
 import '../../domain/entities/visit.dart';
-
 class VisitModel {
   final String id;
   final String siteName;
@@ -9,7 +8,6 @@ class VisitModel {
   final DateTime createdAt;
   final VisitStage stage;
   final DateTime? syncedAt;
-
   const VisitModel({
     required this.id,
     required this.siteName,
@@ -20,7 +18,6 @@ class VisitModel {
     required this.stage,
     this.syncedAt,
   });
-
   factory VisitModel.fromJson(Map<String, dynamic> json) {
     return VisitModel(
       id: json['id'] as String,
@@ -33,9 +30,7 @@ class VisitModel {
       syncedAt: json['synced_at'] != null
           ? DateTime.parse(json['synced_at'] as String)
           : null,
-    );
-  }
-
+    );}
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -46,6 +41,4 @@ class VisitModel {
       'created_at': createdAt.toIso8601String(),
       'stage': stage.name,
       'synced_at': syncedAt?.toIso8601String(),
-    };
-  }
-}
+    };}}

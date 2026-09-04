@@ -1,5 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-
 abstract class ConnectivityService {
   Future<bool>checkConnection();
   Stream<bool>get connectionStream;

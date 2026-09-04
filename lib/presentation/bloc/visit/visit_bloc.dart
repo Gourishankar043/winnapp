@@ -8,19 +8,14 @@ import '../../../domain/usecases/sync_visits.dart';
 import '../../../domain/usecases/update_visit.dart';
 import 'visit_event.dart';
 import 'visit_state.dart';
-
 class VisitBloc extends Bloc<VisitEvent, VisitState> {
   final GetVisits getVisits;
   final CreateVisit createVisit;
   final UpdateVisit updateVisit;
   final SyncVisits syncVisits;
   final SearchVisits searchVisits;
-
   List<Visit> _allVisits = [];
-
-  List<Visit> get allVisits =>
-      List.unmodifiable(_allVisits);
-
+  List<Visit> get allVisits => List.unmodifiable(_allVisits);
   VisitBloc({
     required this.getVisits,
     required this.createVisit,
@@ -34,130 +29,77 @@ class VisitBloc extends Bloc<VisitEvent, VisitState> {
     on<SyncVisitRequested>(_onSyncVisit);
     on<SearchVisitsRequested>(_onSearchVisits);
   }
-
   Future<void> _onLoadVisits(
       LoadVisits event,
       Emitter<VisitState> emit,
       ) async {
     emit(const VisitLoading());
-
     try {
       final visits = await getVisits();
-
       _allVisits = visits;
-
       if (visits.isEmpty) {
         emit(const VisitEmpty());
         return;
       }
-
       emit(VisitLoaded(visits));
     } catch (e) {
-      emit(
-        VisitError(
-          message: e.toString(),
-        ),
-      );
+      emit(VisitError(message: e.toString()));
     }
   }
-
   Future<void> _onCreateVisit(
       CreateVisitRequested event,
       Emitter<VisitState> emit,
       ) async {
     emit(const VisitLoading());
-
     try {
       await createVisit(event.visit);
-
       final visits = await getVisits();
-
       _allVisits = visits;
-
-      emit(
-        VisitCreated(event.visit),
-      );
+      emit(VisitCreated(event.visit));
     } catch (e) {
-      emit(
-        VisitError(
-          message: e.toString(),
-        ),
-      );
+      emit(VisitError(message: e.toString()));
     }
   }
-
   Future<void> _onUpdateVisit(
       UpdateVisitRequested event,
       Emitter<VisitState> emit,
       ) async {
     emit(const VisitLoading());
-
     try {
-      final updatedVisit =
-      await updateVisit(event.visit);
-
+      final updatedVisit = await updateVisit(event.visit);
       final visits = await getVisits();
 
       _allVisits = visits;
-
-      emit(
-        VisitUpdated(updatedVisit),
-      );
+      emit(VisitUpdated(updatedVisit));
     } catch (e) {
-      emit(
-        VisitError(
-          message: e.toString(),
-        ),
-      );
+      emit(VisitError(message: e.toString()));
     }
   }
-
   Future<void> _onSyncVisit(
       SyncVisitRequested event,
       Emitter<VisitState> emit,
       ) async {
     emit(const VisitLoading());
-
     try {
-      final syncedVisit =
-      await syncVisits(event.visit);
-
+      final syncedVisit = await syncVisits(event.visit);
       final visits = await getVisits();
-
       _allVisits = visits;
-
-      emit(
-        VisitSynced(syncedVisit),
-      );
+      emit(VisitSynced(syncedVisit));
     } on OfflineSyncException {
-      emit(
-        VisitSyncOffline(event.visit),
-      );
+      emit(VisitSyncOffline(event.visit));
     } catch (e) {
-      emit(
-        VisitError(
-          message: e.toString(),
-        ),
-      );
+      emit(VisitError(message: e.toString()));
     }
   }
-
   void _onSearchVisits(
       SearchVisitsRequested event,
       Emitter<VisitState> emit,
       ) {
-    final filteredVisits = searchVisits(
-      _allVisits,
-      event.query,
-    );
-
+    final filteredVisits = searchVisits(_allVisits, event.query);
     if (filteredVisits.isEmpty) {
       emit(const VisitEmpty());
       return;
     }
-
-    emit(
-      VisitLoaded(filteredVisits),
-    );
+    emit(VisitLoaded(filteredVisits));
   }
 }

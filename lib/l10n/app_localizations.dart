@@ -272,6 +272,12 @@ abstract class AppLocalizations {
   /// **'Visit synced successfully.'**
   String get syncSuccess;
 
+  /// No description provided for @syncDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit is still a draft. You can try syncing again.'**
+  String get syncDraft;
+
   /// No description provided for @syncFailed.
   ///
   /// In en, this message translates to:

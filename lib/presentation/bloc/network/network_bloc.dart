@@ -3,19 +3,15 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:winnapp/presentation/bloc/network/network_event.dart';
 import 'package:winnapp/presentation/bloc/network/network_state.dart';
-
 import '../../../core/network/connectivity_service.dart';
-
 class NetworkBloc extends Bloc<NetworkEvent,NetworkState>{
   final ConnectivityService connectivityService;
-
   StreamSubscription<bool>?_connectionSubsrciption;
   NetworkBloc({
     required this.connectivityService,
 }):super(const NetworkInitial()){
     on<CheckNetworkStatus>(_onCheckNetworkStatus);
     on<NetworkStatusChanged>(_onNetworkStatusChanged);
-
     _connectionSubsrciption=connectivityService.connectionStream.listen(
         (isConnected){
           add(NetworkStatusChanged(isConnected));

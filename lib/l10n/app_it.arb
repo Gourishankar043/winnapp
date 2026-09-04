@@ -28,6 +28,7 @@
   "justNow": "proprio ora",
   "offlineMessage": "Sei offline — le modifiche vengono salvate localmente",
   "syncSuccess": "Visita sincronizzata correttamente.",
+  "syncDraft": "La visita è ancora una bozza. Puoi provare a sincronizzarla di nuovo.",
   "syncFailed": "La sincronizzazione della visita non è riuscita. Riprova.",
   "syncOffline": "Nessuna connessione Internet. Impossibile sincronizzare. La visita rimane salvata come bozza.",
   "requiredField": "Questo campo è obbligatorio",

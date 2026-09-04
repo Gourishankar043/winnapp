@@ -28,6 +28,7 @@
   "justNow": "just now",
   "offlineMessage": "You're offline — changes save locally",
   "syncSuccess": "Visit synced successfully.",
+  "syncDraft": "Visit is still a draft. You can try syncing again.",
   "syncFailed": "Visit sync failed. Please try again.",
   "syncOffline": "No internet connection. Unable to sync. Visit remains saved as a draft.",
   "requiredField": "This field is required",

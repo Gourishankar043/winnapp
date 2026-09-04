@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-
 import '../../theme/app_spacing.dart';
-
 class LoadingView extends StatelessWidget {
   const LoadingView({
     super.key,
     this.message,
   });
-
   final String? message;
-
   @override
   Widget build(BuildContext context) {
     return Center(

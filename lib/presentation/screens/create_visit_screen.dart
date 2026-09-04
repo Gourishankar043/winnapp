@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
-
 import '../../core/components/navigation/app_scaffold.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../domain/entities/visit.dart';
@@ -10,24 +9,19 @@ import '../bloc/visit/visit_bloc.dart';
 import '../bloc/visit/visit_event.dart';
 import '../bloc/visit/visit_state.dart';
 import '../widgets/visit_form.dart';
-
 class CreateVisitScreen extends StatefulWidget {
   final ValueChanged<Locale> onLocaleChanged;
-
   const CreateVisitScreen({
     super.key,
     required this.onLocaleChanged,
   });
-
   @override
   State<CreateVisitScreen> createState() => _CreateVisitScreenState();
 }
-
 class _CreateVisitScreenState extends State<CreateVisitScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     return AppScaffold(
       onLocaleChanged: widget.onLocaleChanged,
       appBar: AppBar(
@@ -35,9 +29,7 @@ class _CreateVisitScreenState extends State<CreateVisitScreen> {
         leading: IconButton(
           tooltip: l10n.cancel,
           onPressed: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            }
+            if (Navigator.canPop(context)) Navigator.pop(context);
           },
           icon: const Icon(Icons.close),
         ),
@@ -45,18 +37,12 @@ class _CreateVisitScreenState extends State<CreateVisitScreen> {
       body: BlocConsumer<VisitBloc, VisitState>(
         listener: (context, state) {
           if (state is VisitCreated) {
-            Navigator.pop(
-              context,
-              state.visit,
-            );
+            Navigator.pop(context, state.visit);
             return;
           }
-
           if (state is VisitError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-              ),
+              SnackBar(content: Text(state.message)),
             );
           }
         },
@@ -73,10 +59,8 @@ class _CreateVisitScreenState extends State<CreateVisitScreen> {
       ),
     );
   }
-
   void _createVisit(VisitFormData formData) {
     final now = DateTime.now();
-
     final visit = Visit(
       id: const Uuid().v4(),
       siteName: formData.siteName,
@@ -86,9 +70,6 @@ class _CreateVisitScreenState extends State<CreateVisitScreen> {
       createdAt: now,
       stage: VisitStage.draft,
     );
-
-    context.read<VisitBloc>().add(
-      CreateVisitRequested(visit),
-    );
+    context.read<VisitBloc>().add(CreateVisitRequested(visit));
   }
 }

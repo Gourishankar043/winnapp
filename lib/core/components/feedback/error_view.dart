@@ -4,21 +4,17 @@ import '../../../l10n/app_localizations.dart';
 import '../../theme/app_dimensions.dart';
 import '../../theme/app_spacing.dart';
 import '../buttons/primary_button.dart';
-
 class ErrorView extends StatelessWidget {
   const ErrorView({
     super.key,
     required this.message,
     this.onRetry,
   });
-
   final String message;
   final VoidCallback? onRetry;
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),

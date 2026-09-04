@@ -28,6 +28,7 @@
   "justNow": "gerade eben",
   "offlineMessage": "Sie sind offline — Änderungen werden lokal gespeichert",
   "syncSuccess": "Besuch erfolgreich synchronisiert.",
+  "syncDraft": "Der Besuch ist weiterhin ein Entwurf. Sie können erneut versuchen, ihn zu synchronisieren.",
   "syncFailed": "Die Synchronisierung des Besuchs ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
   "syncOffline": "Keine Internetverbindung. Synchronisierung nicht möglich. Der Besuch bleibt als Entwurf gespeichert.",
   "requiredField": "Dieses Feld ist erforderlich",

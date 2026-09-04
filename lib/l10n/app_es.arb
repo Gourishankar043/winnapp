@@ -28,6 +28,7 @@
   "justNow": "ahora mismo",
   "offlineMessage": "Estás sin conexión — los cambios se guardan localmente",
   "syncSuccess": "La visita se sincronizó correctamente.",
+  "syncDraft": "La visita sigue como borrador. Puedes intentar sincronizarla de nuevo.",
   "syncFailed": "La sincronización de la visita falló. Inténtalo de nuevo.",
   "syncOffline": "No hay conexión a Internet. No se puede sincronizar. La visita permanece guardada como borrador.",
   "requiredField": "Este campo es obligatorio",

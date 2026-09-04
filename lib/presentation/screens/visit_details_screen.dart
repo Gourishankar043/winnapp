@@ -118,7 +118,8 @@ class _VisitDetailsScreenState
                   ),
                   _DetailRow(
                     label: l10n.location,
-                    value: currentVisit.location,
+                    value:
+                    currentVisit.location,
                   ),
                   const SizedBox(
                     height: AppSpacing.md,
@@ -133,7 +134,8 @@ class _VisitDetailsScreenState
                     height: AppSpacing.lg,
                   ),
                   AppCard(
-                    padding: const EdgeInsets.all(
+                    padding:
+                    const EdgeInsets.all(
                       AppSpacing.md,
                     ),
                     child: Text(
@@ -187,10 +189,21 @@ class _VisitDetailsScreenState
       final l10n =
       AppLocalizations.of(context)!;
 
-      final message =
-      state.visit.stage == VisitStage.synced
-          ? l10n.syncSuccess
-          : l10n.syncFailed;
+      String message;
+
+      switch (state.visit.stage) {
+        case VisitStage.synced:
+          message = l10n.syncSuccess;
+          break;
+
+        case VisitStage.draft:
+          message = l10n.syncDraft;
+          break;
+
+        case VisitStage.failed:
+          message = l10n.syncFailed;
+          break;
+      }
 
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -288,8 +301,7 @@ class _VisitDetailsScreenState
                 OutlinedButton.styleFrom(
                   minimumSize: const Size(
                     double.infinity,
-                    AppDimensions
-                        .buttonHeight,
+                    AppDimensions.buttonHeight,
                   ),
                 ),
                 child: Text(l10n.edit),
@@ -309,16 +321,15 @@ class _VisitDetailsScreenState
                 ElevatedButton.styleFrom(
                   minimumSize: const Size(
                     double.infinity,
-                    AppDimensions
-                        .buttonHeight,
+                    AppDimensions.buttonHeight,
                   ),
                 ),
                 child: isSaving
                     ? const SizedBox(
-                  width: AppDimensions
-                      .iconSmall,
-                  height: AppDimensions
-                      .iconSmall,
+                  width:
+                  AppDimensions.iconSmall,
+                  height:
+                  AppDimensions.iconSmall,
                   child:
                   CircularProgressIndicator(
                     strokeWidth: 2,

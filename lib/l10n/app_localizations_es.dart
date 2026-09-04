@@ -95,6 +95,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get syncSuccess => 'La visita se sincronizó correctamente.';
 
   @override
+  String get syncDraft =>
+      'La visita sigue como borrador. Puedes intentar sincronizarla de nuevo.';
+
+  @override
   String get syncFailed =>
       'La sincronización de la visita falló. Inténtalo de nuevo.';
 

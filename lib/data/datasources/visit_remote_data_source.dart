@@ -26,14 +26,21 @@ class VisitRemoteDataSourceImpl
     final response =
     Map<String, dynamic>.from(data);
 
-    final isSuccessful = _random.nextBool();
+    const stages = [
+      'synced',
+      'draft',
+      'failed',
+    ];
 
-    if (isSuccessful) {
-      response['stage'] = 'synced';
+    final stage =
+    stages[_random.nextInt(stages.length)];
+
+    response['stage'] = stage;
+
+    if (stage == 'synced') {
       response['synced_at'] =
           DateTime.now().toIso8601String();
     } else {
-      response['stage'] = 'failed';
       response['synced_at'] = null;
     }
 

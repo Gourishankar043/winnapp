@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-
 import '../../theme/app_dimensions.dart';
 import '../../theme/app_spacing.dart';
 import '../buttons/primary_button.dart';
-
 class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
@@ -13,17 +11,14 @@ class EmptyState extends StatelessWidget {
     this.actionLabel,
     this.onAction,
   });
-
   final IconData icon;
   final String title;
   final String message;
   final String? actionLabel;
   final VoidCallback? onAction;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
@@ -54,11 +49,4 @@ class EmptyState extends StatelessWidget {
               PrimaryButton(
                 label: actionLabel!,
                 onPressed: onAction,
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
+              ),],],),),);}}

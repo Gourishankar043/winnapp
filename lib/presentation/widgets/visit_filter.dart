@@ -2,23 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_spacing.dart';
 import '../../l10n/app_localizations.dart';
-
 class VisitFilter extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
-
   const VisitFilter({
     super.key,
     required this.controller,
     required this.onChanged,
     required this.onClear,
   });
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppSpacing.md,

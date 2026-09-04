@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../../theme/app_colors.dart';
 import '../../theme/app_dimensions.dart';
-
 class ShimmerLoader extends StatefulWidget {
   const ShimmerLoader({
     super.key,
@@ -10,47 +8,37 @@ class ShimmerLoader extends StatefulWidget {
     this.width,
     this.borderRadius,
   });
-
   final double height;
   final double? width;
   final double? borderRadius;
-
   @override
   State<ShimmerLoader> createState() => _ShimmerLoaderState();
 }
-
 class _ShimmerLoaderState extends State<ShimmerLoader>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..repeat();
   }
-
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     final baseColor = isDark
         ? AppColors.darkSurface
         : AppColors.lightSurface;
-
     final highlightColor = isDark
         ? AppColors.darkBorder
         : AppColors.lightBorder;
-
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {

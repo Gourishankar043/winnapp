@@ -17,7 +17,6 @@ class AppScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.bottomNavigationBar,
   });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

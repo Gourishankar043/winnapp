@@ -15,54 +15,31 @@ import 'routes/app_routes.dart';
 import 'routes/route_names.dart';
 
 class App extends StatefulWidget {
-  const App({
-    super.key,
-  });
-
+  const App({super.key});
   @override
   State<App> createState() => _AppState();
 }
-
 class _AppState extends State<App> {
   late Locale _locale;
-
   @override
   void initState() {
     super.initState();
-
-    final languageCode =
-    getIt<LanguageStorage>().getLanguageCode();
-
+    final languageCode = getIt<LanguageStorage>().getLanguageCode();
     _locale = Locale(languageCode);
   }
-
   Future<void> _changeLocale(Locale locale) async {
-    await getIt<LanguageStorage>().saveLanguageCode(
-      locale.languageCode,
-    );
-
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _locale = locale;
-    });
+    await getIt<LanguageStorage>().saveLanguageCode(locale.languageCode);
+    if (!mounted) return;
+    setState(() => _locale = locale);
   }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<NetworkBloc>(
-          create: (_) => getIt<NetworkBloc>()
-            ..add(
-              const CheckNetworkStatus(),
-            ),
+          create: (_) => getIt<NetworkBloc>()..add(const CheckNetworkStatus()),
         ),
-        BlocProvider<VisitBloc>(
-          create: (_) => getIt<VisitBloc>(),
-        ),
+        BlocProvider<VisitBloc>(create: (_) => getIt<VisitBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -83,39 +60,23 @@ class _AppState extends State<App> {
           GlobalCupertinoLocalizations.delegate,
         ],
         initialRoute: RouteNames.visitList,
-        onGenerateRoute: (settings) {
-          return AppRoutes.onGenerateRoute(
-            settings,
-            onLocaleChanged: _changeLocale,
-          );
-        },
+        onGenerateRoute: (settings) => AppRoutes.onGenerateRoute(
+          settings,
+          onLocaleChanged: _changeLocale,
+        ),
         builder: (context, child) {
           return BlocBuilder<NetworkBloc, NetworkState>(
             builder: (context, state) {
               final isOffline = state is NetworkOffline;
-
               return Column(
                 children: [
                   AnimatedSwitcher(
-                    duration: const Duration(
-                      milliseconds: 250,
-                    ),
+                    duration: const Duration(milliseconds: 250),
                     child: isOffline
-                        ? const OfflineBanner(
-                      key: ValueKey(
-                        'offline-banner',
-                      ),
-                    )
-                        : const SizedBox.shrink(
-                      key: ValueKey(
-                        'online-state',
-                      ),
-                    ),
+                        ? const OfflineBanner(key: ValueKey('offline-banner'))
+                        : const SizedBox.shrink(key: ValueKey('online-state')),
                   ),
-                  Expanded(
-                    child: child ??
-                        const SizedBox.shrink(),
-                  ),
+                  Expanded(child: child ?? const SizedBox.shrink()),
                 ],
               );
             },
